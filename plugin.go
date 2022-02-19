@@ -15,9 +15,7 @@ func (g *Plugin) Init() error {
 }
 
 func (g *Plugin) Middleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		gzhttp.GzipHandler(next).ServeHTTP(w, r)
-	})
+	return gzhttp.GzipHandler(next)
 }
 
 func (g *Plugin) Name() string {
