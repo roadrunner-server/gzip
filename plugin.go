@@ -24,10 +24,10 @@ func (g *Plugin) Middleware(next http.Handler) http.Handler {
 			tp := trace.SpanFromContext(r.Context()).TracerProvider()
 			ctx, span := tp.Tracer(val).Start(r.Context(), PluginName)
 			defer span.End()
-			next.ServeHTTP(w, r.WithContext(ctx))
-		} else {
-			next.ServeHTTP(w, r)
+			r = r.WithContext(ctx)
 		}
+
+		next.ServeHTTP(w, r)
 	}))
 }
 
