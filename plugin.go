@@ -5,6 +5,7 @@ import (
 
 	"github.com/klauspost/compress/gzhttp"
 	"github.com/roadrunner-server/sdk/v2/utils"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -12,9 +13,13 @@ const (
 	PluginName = "gzip"
 )
 
-type Plugin struct{}
+type Plugin struct {
+	prop propagation.TextMapPropagator
+}
 
 func (g *Plugin) Init() error {
+	g.prop = propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{})
+
 	return nil
 }
 
@@ -24,7 +29,9 @@ func (g *Plugin) Middleware(next http.Handler) http.Handler {
 			tp := trace.SpanFromContext(r.Context()).TracerProvider()
 			ctx, span := tp.Tracer(val).Start(r.Context(), PluginName)
 			defer span.End()
+
 			r = r.WithContext(ctx)
+			g.prop.Inject(r.Context(), propagation.HeaderCarrier(r.Header))
 		}
 
 		next.ServeHTTP(w, r)
