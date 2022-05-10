@@ -29,7 +29,9 @@ func (g *Plugin) Middleware(next http.Handler) http.Handler {
 	return gzhttp.GzipHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if val, ok := r.Context().Value(utils.OtelTracerNameKey).(string); ok {
 			tp := trace.SpanFromContext(r.Context()).TracerProvider()
-			ctx, span := tp.Tracer(val, trace.WithSchemaURL(semconv.SchemaURL), trace.WithInstrumentationVersion(otelhttp.SemVersion())).Start(r.Context(), PluginName, trace.WithSpanKind(trace.SpanKindServer))
+			ctx, span := tp.Tracer(val, trace.WithSchemaURL(semconv.SchemaURL),
+				trace.WithInstrumentationVersion(otelhttp.SemVersion())).
+				Start(r.Context(), PluginName, trace.WithSpanKind(trace.SpanKindServer))
 			defer span.End()
 
 			// inject
