@@ -35,7 +35,7 @@ func (g *Plugin) Middleware(next http.Handler) http.Handler {
 			defer span.End()
 
 			// inject
-			g.prop.Inject(r.Context(), propagation.HeaderCarrier(r.Header))
+			g.prop.Inject(ctx, propagation.HeaderCarrier(r.Header))
 			r = r.WithContext(ctx)
 		}
 
