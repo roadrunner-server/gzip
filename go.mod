@@ -11,7 +11,7 @@ require (
 )
 
 require (
-	github.com/felixge/httpsnoop v1.0.2 // indirect
+	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/roadrunner-server/errors v1.1.2 // indirect
