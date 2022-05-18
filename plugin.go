@@ -6,6 +6,7 @@ import (
 	"github.com/klauspost/compress/gzhttp"
 	"github.com/roadrunner-server/sdk/v2/utils"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	jprop "go.opentelemetry.io/contrib/propagators/jaeger"
 	"go.opentelemetry.io/otel/propagation"
 	semconv "go.opentelemetry.io/otel/semconv/v1.10.0"
 	"go.opentelemetry.io/otel/trace"
@@ -20,7 +21,7 @@ type Plugin struct {
 }
 
 func (g *Plugin) Init() error {
-	g.prop = propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{})
+	g.prop = propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}, jprop.Jaeger{})
 
 	return nil
 }
