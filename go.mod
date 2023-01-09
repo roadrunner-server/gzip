@@ -1,4 +1,4 @@
-module github.com/roadrunner-server/gzip/v3
+module github.com/roadrunner-server/gzip/v4
 
 go 1.19
 
