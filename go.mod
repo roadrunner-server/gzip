@@ -3,7 +3,7 @@ module github.com/roadrunner-server/gzip/v4
 go 1.20
 
 require (
-	github.com/klauspost/compress v1.16.4
+	github.com/klauspost/compress v1.16.5
 	github.com/roadrunner-server/sdk/v4 v4.2.1
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.40.0
 	go.opentelemetry.io/contrib/propagators/jaeger v1.15.0
