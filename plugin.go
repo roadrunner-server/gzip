@@ -31,7 +31,7 @@ func (g *Plugin) Middleware(next http.Handler) http.Handler {
 		if val, ok := r.Context().Value(utils.OtelTracerNameKey).(string); ok {
 			tp := trace.SpanFromContext(r.Context()).TracerProvider()
 			ctx, span := tp.Tracer(val, trace.WithSchemaURL(semconv.SchemaURL),
-				trace.WithInstrumentationVersion(otelhttp.SemVersion())).
+				trace.WithInstrumentationVersion(otelhttp.Version())).
 				Start(r.Context(), PluginName, trace.WithSpanKind(trace.SpanKindServer))
 			defer span.End()
 
