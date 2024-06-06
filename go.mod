@@ -4,7 +4,7 @@ go 1.22.4
 
 require (
 	github.com/klauspost/compress v1.17.8
-	github.com/roadrunner-server/sdk/v4 v4.7.2
+	github.com/roadrunner-server/sdk/v4 v4.7.3
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.52.0
 	go.opentelemetry.io/contrib/propagators/jaeger v1.27.0
 	go.opentelemetry.io/otel v1.27.0
