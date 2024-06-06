@@ -1,6 +1,6 @@
 module github.com/roadrunner-server/gzip/v4
 
-go 1.22.3
+go 1.22.4
 
 require (
 	github.com/klauspost/compress v1.17.8
