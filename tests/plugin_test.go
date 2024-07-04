@@ -1,6 +1,7 @@
 package gzip
 
 import (
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -9,13 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"log/slog"
-
 	mocklogger "tests/mock"
 
 	"github.com/roadrunner-server/config/v4"
 	"github.com/roadrunner-server/endure/v2"
-	"github.com/roadrunner-server/gzip/v4"
+	"github.com/roadrunner-server/gzip/v5"
 	httpPlugin "github.com/roadrunner-server/http/v4"
 	"github.com/roadrunner-server/logger/v4"
 	"github.com/roadrunner-server/server/v4"
@@ -28,9 +27,8 @@ func TestGzipPlugin(t *testing.T) {
 	cont := endure.New(slog.LevelDebug)
 
 	cfg := &config.Plugin{
-		Version: "2.9.0",
+		Version: "2024.2.0",
 		Path:    "configs/.rr-http-withGzip.yaml",
-		Prefix:  "rr",
 	}
 
 	err := cont.RegisterAll(
@@ -113,9 +111,8 @@ func TestMiddlewareNotExist(t *testing.T) {
 	cont := endure.New(slog.LevelDebug)
 
 	cfg := &config.Plugin{
-		Version: "2.9.0",
+		Version: "2024.2.0",
 		Path:    "configs/.rr-http-middlewareNotExist.yaml",
-		Prefix:  "rr",
 	}
 
 	l, oLogger := mocklogger.ZapTestLogger(zap.DebugLevel)
