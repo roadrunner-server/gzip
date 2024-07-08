@@ -12,12 +12,12 @@ import (
 
 	mocklogger "tests/mock"
 
-	"github.com/roadrunner-server/config/v4"
+	"github.com/roadrunner-server/config/v5"
 	"github.com/roadrunner-server/endure/v2"
 	"github.com/roadrunner-server/gzip/v5"
-	httpPlugin "github.com/roadrunner-server/http/v4"
-	"github.com/roadrunner-server/logger/v4"
-	"github.com/roadrunner-server/server/v4"
+	httpPlugin "github.com/roadrunner-server/http/v5"
+	"github.com/roadrunner-server/logger/v5"
+	"github.com/roadrunner-server/server/v5"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
