@@ -2,7 +2,7 @@ module github.com/roadrunner-server/gzip/v5
 
 go 1.25
 
-toolchain go1.25.0
+toolchain go1.25.1
 
 require (
 	github.com/klauspost/compress v1.18.0
