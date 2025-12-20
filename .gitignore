@@ -16,3 +16,5 @@
 .idea
 .DS_Store
 **/composer.lock
+**/vendor/
+**/php_test_files/vendor/**
