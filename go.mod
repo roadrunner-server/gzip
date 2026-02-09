@@ -5,7 +5,7 @@ go 1.25
 toolchain go1.25.7
 
 require (
-	github.com/klauspost/compress v1.18.3
+	github.com/klauspost/compress v1.18.4
 	github.com/roadrunner-server/context v1.2.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.65.0
 	go.opentelemetry.io/contrib/propagators/jaeger v1.40.0
