@@ -2,6 +2,7 @@ package gzip
 
 import (
 	"net/http"
+	"sync"
 
 	"github.com/klauspost/compress/gzhttp"
 	rrcontext "github.com/roadrunner-server/context"
@@ -20,6 +21,22 @@ type Plugin struct {
 	prop propagation.TextMapPropagator
 }
 
+var onceDefault sync.Once                              //nolint:gochecknoglobals
+var defaultWrapper func(http.Handler) http.HandlerFunc //nolint:gochecknoglobals
+
+// GzipHandler allows to easily wrap an http handler with default settings.
+func gzipHandler(h http.Handler) http.HandlerFunc {
+	onceDefault.Do(func() {
+		var err error
+		defaultWrapper, err = gzhttp.NewWrapper(gzhttp.PreferZstd(false), gzhttp.EnableZstd(false), gzhttp.EnableGzip(true))
+		if err != nil {
+			panic(err)
+		}
+	})
+
+	return defaultWrapper(h)
+}
+
 func (g *Plugin) Init() error {
 	g.prop = propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}, jprop.Jaeger{})
 
@@ -27,7 +44,7 @@ func (g *Plugin) Init() error {
 }
 
 func (g *Plugin) Middleware(next http.Handler) http.Handler {
-	return gzhttp.GzipHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return gzipHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if val, ok := r.Context().Value(rrcontext.OtelTracerNameKey).(string); ok {
 			tp := trace.SpanFromContext(r.Context()).TracerProvider()
 			ctx, span := tp.Tracer(val, trace.WithSchemaURL(semconv.SchemaURL),
