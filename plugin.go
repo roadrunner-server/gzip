@@ -49,7 +49,7 @@ func (g *Plugin) Middleware(next http.Handler) http.Handler {
 			tp := trace.SpanFromContext(r.Context()).TracerProvider()
 			ctx, span := tp.Tracer(val, trace.WithSchemaURL(semconv.SchemaURL),
 				trace.WithInstrumentationVersion(otelhttp.Version)).
-				Start(r.Context(), PluginName, trace.WithSpanKind(trace.SpanKindServer))
+				Start(r.Context(), PluginName, trace.WithSpanKind(trace.SpanKindInternal))
 			defer span.End()
 
 			// inject
