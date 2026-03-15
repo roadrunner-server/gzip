@@ -14,7 +14,7 @@ import (
 
 	"github.com/roadrunner-server/config/v5"
 	"github.com/roadrunner-server/endure/v2"
-	"github.com/roadrunner-server/gzip/v5"
+	"github.com/roadrunner-server/gzip/v6"
 	httpPlugin "github.com/roadrunner-server/http/v5"
 	"github.com/roadrunner-server/logger/v5"
 	"github.com/roadrunner-server/server/v5"

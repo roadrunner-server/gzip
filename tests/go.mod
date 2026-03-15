@@ -5,7 +5,7 @@ go 1.26
 require (
 	github.com/roadrunner-server/config/v5 v5.1.9
 	github.com/roadrunner-server/endure/v2 v2.6.2
-	github.com/roadrunner-server/gzip/v5 v5.3.0
+	github.com/roadrunner-server/gzip/v6 v6.0.0
 	github.com/roadrunner-server/http/v5 v5.3.0
 	github.com/roadrunner-server/logger/v5 v5.1.9
 	github.com/roadrunner-server/server/v5 v5.2.10
@@ -13,7 +13,7 @@ require (
 	go.uber.org/zap v1.27.1
 )
 
-replace github.com/roadrunner-server/gzip/v5 => ../
+replace github.com/roadrunner-server/gzip/v6 => ../
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -76,14 +76,14 @@ require (
 	go.uber.org/zap/exp v0.3.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.4 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/crypto v0.48.0 // indirect
-	golang.org/x/mod v0.33.0 // indirect
-	golang.org/x/net v0.51.0 // indirect
+	golang.org/x/crypto v0.49.0 // indirect
+	golang.org/x/mod v0.34.0 // indirect
+	golang.org/x/net v0.52.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
 	golang.org/x/sys v0.42.0 // indirect
-	golang.org/x/text v0.34.0 // indirect
-	golang.org/x/tools v0.42.0 // indirect
-	google.golang.org/genproto v0.0.0-20260226221140-a57be14db171 // indirect
+	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/tools v0.43.0 // indirect
+	google.golang.org/genproto v0.0.0-20260311181403-84a4fc48630c // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

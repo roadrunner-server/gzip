@@ -56,7 +56,7 @@ jobs:
           cd tests
           mkdir ./coverage-ci
 
-          go test -timeout 20m -v -race -cover -tags=debug -failfast -coverpkg=$(cat pkgs.txt) -coverprofile=./coverage-ci/gzip.out -covermode=atomic plugin_test.go
+          go test -timeout 20m -v -race -cover -tags=debug -failfast -coverpkg=github.com/roadrunner-server/gzip/v6/... -coverprofile=./coverage-ci/gzip.out -covermode=atomic plugin_test.go
       - name: Archive code coverage results
         uses: actions/upload-artifact@v7
         with:
@@ -81,8 +81,8 @@ jobs:
           tail -q -n +2 coverage/*.out >> summary.txt
           awk '
             NR == 1 { print; next }
-            /^github\.com\/roadrunner-server\/gzip\/v5\// {
-              sub(/^github\.com\/roadrunner-server\/gzip\/v5\//, "", $0)
+            /^github\.com\/roadrunner-server\/gzip\/v6\// {
+              sub(/^github\.com\/roadrunner-server\/gzip\/v6\//, "", $0)
               print
             }
           ' summary.txt > summary.filtered.txt
