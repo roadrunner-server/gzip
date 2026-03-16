@@ -4,7 +4,7 @@ go 1.26
 
 require (
 	github.com/klauspost/compress v1.18.4
-	github.com/roadrunner-server/context v1.2.0
+	github.com/roadrunner-server/context v1.3.0
 	github.com/stretchr/testify v1.11.1
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.67.0
 	go.opentelemetry.io/contrib/propagators/jaeger v1.42.0
