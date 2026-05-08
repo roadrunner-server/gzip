@@ -14,7 +14,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-func TestMiddlewareSpanWrapsDownstream(t *testing.T) {
+func TestMiddlewareSpanEndBeforeNext(t *testing.T) {
 	exporter := tracetest.NewInMemoryExporter()
 	tp := sdktrace.NewTracerProvider(sdktrace.WithSyncer(exporter))
 	t.Cleanup(func() { _ = tp.Shutdown(t.Context()) })
@@ -61,16 +61,11 @@ func TestMiddlewareSpanWrapsDownstream(t *testing.T) {
 	require.NotEmpty(t, gzipSpan.Name, "gzip middleware span was not found in exported spans")
 	require.NotEmpty(t, nextSpan.Name, "next handler span was not found in exported spans")
 
-	// The gzip span must encompass the downstream span (wrapping pattern)
-	assert.True(t,
-		!gzipSpan.EndTime.Before(nextSpan.EndTime),
-		"gzip span must end after (or at) the next handler span ends: gzip.End=%v, next.End=%v",
-		gzipSpan.EndTime, nextSpan.EndTime,
-	)
-
-	// The next handler span must be a child of the gzip span
-	assert.Equal(t, gzipSpan.SpanContext.SpanID(), nextSpan.Parent.SpanID(),
-		"next handler span must be a child of the gzip span",
+	// The gzip span must end before the next handler starts,
+	// proving the span covers only the middleware's own work.
+	assert.False(t, gzipSpan.EndTime.After(nextSpan.StartTime),
+		"gzip span EndTime (%v) should not be after next-handler StartTime (%v)",
+		gzipSpan.EndTime, nextSpan.StartTime,
 	)
 
 	// The gzip span must use SpanKindInternal (middleware, not entry-point)

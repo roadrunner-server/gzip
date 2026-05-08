@@ -1,6 +1,7 @@
 package gzip
 
 import (
+	"context"
 	"net/http"
 	"sync"
 
@@ -45,16 +46,22 @@ func (g *Plugin) Init() error {
 
 func (g *Plugin) Middleware(next http.Handler) http.Handler {
 	return gzipHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var span trace.Span
+
 		if val, ok := r.Context().Value(rrcontext.OtelTracerNameKey).(string); ok {
 			tp := trace.SpanFromContext(r.Context()).TracerProvider()
-			ctx, span := tp.Tracer(val, trace.WithSchemaURL(semconv.SchemaURL),
+			var ctx context.Context
+			ctx, span = tp.Tracer(val, trace.WithSchemaURL(semconv.SchemaURL),
 				trace.WithInstrumentationVersion(otelhttp.Version)).
 				Start(r.Context(), PluginName, trace.WithSpanKind(trace.SpanKindInternal))
-			defer span.End()
 
 			// inject
 			g.prop.Inject(ctx, propagation.HeaderCarrier(r.Header))
 			r = r.WithContext(ctx)
+		}
+
+		if span != nil {
+			span.End()
 		}
 
 		next.ServeHTTP(w, r)
