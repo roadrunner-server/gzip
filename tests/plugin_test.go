@@ -10,8 +10,6 @@ import (
 	"testing"
 	"time"
 
-	mocklogger "tests/mock"
-
 	"github.com/roadrunner-server/config/v5"
 	"github.com/roadrunner-server/endure/v2"
 	"github.com/roadrunner-server/gzip/v6"
@@ -20,7 +18,7 @@ import (
 	"github.com/roadrunner-server/server/v5"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.uber.org/zap"
+	mocklogger "tests/mock"
 )
 
 func TestGzipPlugin(t *testing.T) {
@@ -115,7 +113,7 @@ func TestMiddlewareNotExist(t *testing.T) {
 		Path:    "configs/.rr-http-middlewareNotExist.yaml",
 	}
 
-	l, oLogger := mocklogger.ZapTestLogger(zap.DebugLevel)
+	l, oLogger := mocklogger.SlogTestLogger(slog.LevelDebug)
 	err := cont.RegisterAll(
 		cfg,
 		l,
