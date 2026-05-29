@@ -1,9 +1,7 @@
 package gzip
 
 import (
-	"context"
 	"net/http"
-	"sync"
 
 	"github.com/klauspost/compress/gzhttp"
 	rrcontext "github.com/roadrunner-server/context"
@@ -19,48 +17,33 @@ const (
 )
 
 type Plugin struct {
-	prop propagation.TextMapPropagator
-}
-
-var onceDefault sync.Once                              //nolint:gochecknoglobals
-var defaultWrapper func(http.Handler) http.HandlerFunc //nolint:gochecknoglobals
-
-// GzipHandler allows to easily wrap an http handler with default settings.
-func gzipHandler(h http.Handler) http.HandlerFunc {
-	onceDefault.Do(func() {
-		var err error
-		defaultWrapper, err = gzhttp.NewWrapper(gzhttp.PreferZstd(false), gzhttp.EnableZstd(false), gzhttp.EnableGzip(true))
-		if err != nil {
-			panic(err)
-		}
-	})
-
-	return defaultWrapper(h)
+	prop    propagation.TextMapPropagator
+	wrapper func(http.Handler) http.HandlerFunc
 }
 
 func (g *Plugin) Init() error {
+	wrapper, err := gzhttp.NewWrapper(gzhttp.PreferZstd(false), gzhttp.EnableZstd(false), gzhttp.EnableGzip(true))
+	if err != nil {
+		return err
+	}
+	g.wrapper = wrapper
+
 	g.prop = propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}, jprop.Jaeger{})
 
 	return nil
 }
 
 func (g *Plugin) Middleware(next http.Handler) http.Handler {
-	return gzipHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var span trace.Span
-
+	return g.wrapper(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if val, ok := r.Context().Value(rrcontext.OtelTracerNameKey).(string); ok {
 			tp := trace.SpanFromContext(r.Context()).TracerProvider()
-			var ctx context.Context
-			ctx, span = tp.Tracer(val, trace.WithSchemaURL(semconv.SchemaURL),
+			ctx, span := tp.Tracer(val, trace.WithSchemaURL(semconv.SchemaURL),
 				trace.WithInstrumentationVersion(otelhttp.Version)).
 				Start(r.Context(), PluginName, trace.WithSpanKind(trace.SpanKindInternal))
 
 			// inject
 			g.prop.Inject(ctx, propagation.HeaderCarrier(r.Header))
 			r = r.WithContext(ctx)
-		}
-
-		if span != nil {
 			span.End()
 		}
 
