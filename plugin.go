@@ -2,7 +2,6 @@ package gzip
 
 import (
 	"net/http"
-	"sync"
 
 	"github.com/klauspost/compress/gzhttp"
 	rrcontext "github.com/roadrunner-server/context"
@@ -22,17 +21,12 @@ type Plugin struct {
 	wrapper func(http.Handler) http.HandlerFunc
 }
 
-var newDefaultWrapper = sync.OnceValues(func() (func(http.Handler) http.HandlerFunc, error) { //nolint:gochecknoglobals
-	return gzhttp.NewWrapper(gzhttp.PreferZstd(false), gzhttp.EnableZstd(false), gzhttp.EnableGzip(true))
-})
-
 func (g *Plugin) Init() error {
-	var err error
-
-	g.wrapper, err = newDefaultWrapper()
+	wrapper, err := gzhttp.NewWrapper(gzhttp.PreferZstd(false), gzhttp.EnableZstd(false), gzhttp.EnableGzip(true))
 	if err != nil {
 		return err
 	}
+	g.wrapper = wrapper
 
 	g.prop = propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}, jprop.Jaeger{})
 
